@@ -1,0 +1,44 @@
+
+<link rel="stylesheet" type="text/css" href="css/style.css">
+<link rel="stylesheet" type="text/css" href="css/animations.css">
+
+<!-- plot area -->
+<canvas id="myChart" width="520" height="440"></canvas>
+
+<!-- connection and firmware page -->
+<div id="connection_page" class="content flipInY">
+	<div class="center">
+		<center>
+			<img src="assets/icons/loading.gif" />
+			<div id="loadingMessage" class="text">
+				Checking Devices ...
+			</div>
+
+			<!-- inputs -->
+			<div id="inputs" class="label flipHide">
+				Buffer Size<br>
+				<input id="buffersize" type="number" 			name="buffersize"><br>
+				Offsset<br>
+				<input id="offsets" type="number" 
+					name="offsets"><br>
+				<br>
+				<button id="begin" type="button">
+					Get Data
+				</button>
+			</div>
+		</center>
+	</div>
+</div>
+
+<!-- libs -->
+<script src="lib/Chart.bundle.min.js"></script>
+
+<!-- Classes -->
+<script src="js/Utils.js"></script>
+<script src="js/Serial.js"></script>
+<script src="js/CurrentTiny.js"></script>
+
+<!-- App -->
+<script src="js/appDefines.js"></script>
+<script src="js/myChart.js"></script>
+<script src="js/app.js"></script>

@@ -1,0 +1,16 @@
+{
+	"name": "CurrentTiny Viewer",
+	"version": "0.17",
+	"manifest_version": 2,
+	"permissions": ["serial"],
+	"minimum_chrome_version": "23",
+	"icons": {
+		"16": "assets/icons/icon_16.png",
+		"128": "assets/icons/icon_128.png"
+	},
+	"app": {
+		"background": {
+			"scripts": ["launch.js"]
+		}
+	}
+}

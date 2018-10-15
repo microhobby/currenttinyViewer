@@ -1,0 +1,65 @@
+body {
+	background-color: black;
+}
+
+canvas{
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+}
+
+button {
+	border: 0;
+	border-radius: 0.25rem;
+	background: #caa00a;
+	color: white;
+	font-family: system-ui, sans-serif;
+	font-size: 1rem;
+	line-height: 1.2;
+	white-space: nowrap;
+	text-decoration: none;
+	padding: 0.25rem 0.5rem;
+	margin: 0.25rem;
+	cursor: pointer;
+}
+
+.text {
+	font-size: 20px;
+	line-height: 50px;
+	color: aliceblue;
+}
+
+.label {
+	font-size: 15px;
+	line-height: 50px;
+	color: aliceblue;
+}
+
+.content {
+	position: absolute;
+	left:0; right:0;
+        top:0; bottom:0;
+        margin:auto;
+	transition: transform 1s;
+	transform-style: preserve-3d;
+}
+
+.center {
+	position: absolute;
+	margin: auto;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height: 70%;
+	border-radius: 3px;;
+}
+
+#connection_page {
+	width: 70%;
+	height: 70%;
+	perspective: 100%;
+	background-color: #9f6aff;
+	border-radius: 10px;
+}
