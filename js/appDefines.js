@@ -4,7 +4,10 @@ var myChart = null;
 
 /* defines */
 var RING_BUFFER_SIZE = 1000;
+var RING_TMP = 0;
 var ringstack = 0;
+var newStorage = false;
+var storage = [];
 
 /* DOM bindings */
 var loading_page = document.getElementById("connection_page");
@@ -13,6 +16,7 @@ var div_inputs = document.getElementById("inputs");
 var button_begin = document.getElementById("begin");
 var input_buffersize = document.getElementById("buffersize");
 var input_offsets = document.getElementById("offsets");
+var chart_canvas = document.getElementById("myChart");
 
 /* structs objects */
 window.chartColors = {
@@ -89,6 +93,8 @@ function madeAvgs()
 	var max = -Infinity;
 	var min = Infinity;
 
+	console.info("Make avg to " + RING_BUFFER_SIZE + " points");
+
 	for (var i = 0; i < RING_BUFFER_SIZE; i++) {
 		var read = window.myChart.data.datasets[0].data[i];
 		avg += read;
@@ -112,9 +118,9 @@ function madeAvgs()
 	}
 
 	/* identify the chart captions */
-	window.myChart.data.datasets[1].label = "AVG " + avg.toFixed(3);
-	window.myChart.data.datasets[2].label = "Min " + min.toFixed(3);
-	window.myChart.data.datasets[3].label = "Max " + max.toFixed(3);
+	window.myChart.data.datasets[1].label = "AVG " + avg.toFixed(2) + " mA";
+	window.myChart.data.datasets[2].label = "Min " + min.toFixed(2)+ " mA";
+	window.myChart.data.datasets[3].label = "Max " + max.toFixed(2)+ " mA";
 }
 
 function beginFlush()
@@ -127,16 +133,78 @@ function beginFlush()
 	{
 		current.flushValues(function(data)
 		{
+			var value = parseFloat(data);
+			/* ampere to miliampere */
+			value *= 10000.0;
+
 			/* set to ring buffer */
 			if (ringstack > RING_BUFFER_SIZE) {
 				ringstack = 0;
 				madeAvgs();
 			}
 
+			/* storage is working? */
+			if (newStorage) {
+				storage.push(value);
+			}
+
 			window.myChart.data.datasets[0]
-				.data[ringstack] = parseFloat(data);
+				.data[ringstack] = value;
+			window.myChart.data.datasets[0].label = 
+				value.toFixed(2) + " mA";
 			window.myChart.update();
 			ringstack++;
 		});
 	},2000);
+}
+
+function map_events()
+{
+	window.addEventListener("keyup", function(e)
+	{
+		console.log(e.keyCode);
+
+		/* key S start the sub array */
+		if (e.keyCode == 83) {
+			console.info("Start new storage ...");
+			storage = [];
+			newStorage = true;
+		}
+
+		/* key D stop the sub array and made avg */
+		if (e.keyCode == 68) {
+			console.info("Stop new storage ...");
+			newStorage = false;
+			current.getInstantAVGValue();
+
+			update_ringbuffer(storage.length);
+			console.info("Get " + RING_BUFFER_SIZE + " points");
+			window.myChart.data.datasets[0].data = storage;
+			madeAvgs();
+			window.myChart.update();
+		}
+
+		/* key F start normal flush */
+		if (e.keyCode == 70) {
+			console.info("Resume normal flush ...");
+			update_ringbuffer(RING_TMP);
+			ringstack = 0;
+			current.sendFlushCommand();
+		}
+	});
+}
+
+function update_ringbuffer(size)
+{
+	RING_TMP = RING_BUFFER_SIZE;
+	RING_BUFFER_SIZE = size;
+
+	chartConfig.data.labels = [];
+	window.myChart.data.datasets[0].data = [];
+	window.myChart.data.datasets[1].data = [];
+	window.myChart.data.datasets[2].data = [];
+	window.myChart.data.datasets[3].data = [];
+	/* update ring buffer size */
+	for (var i = 0; i < RING_BUFFER_SIZE; i++)
+		chartConfig.data.labels[i] = i+1;
 }

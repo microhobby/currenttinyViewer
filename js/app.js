@@ -13,9 +13,7 @@ window.onload = function()
 	ctx.canvas.width  = window.innerWidth;
 	ctx.canvas.height = window.innerHeight;
 	
-	/* update ring buffer size */
-	for (var i = 0; i < RING_BUFFER_SIZE; i++)
-		chartConfig.data.labels[i] = i+1;
+	/*update_ringbuffer(RING_BUFFER_SIZE);*/
 
 	/* instantiate here with context from canvas */
 	window.myChart = new Chart(ctx, chartConfig);
@@ -43,9 +41,9 @@ button_begin.onclick = function()
 	RING_BUFFER_SIZE = buffer;
 
 	/* clear labels */
-	chartConfig.data.labels = [];
-	for (var i = 0; i < RING_BUFFER_SIZE; i++)
-		chartConfig.data.labels[i] = i+1;
+	update_ringbuffer(RING_BUFFER_SIZE);
+
+	map_events();
 
 	/* start to get data from device */
 	beginFlush();
