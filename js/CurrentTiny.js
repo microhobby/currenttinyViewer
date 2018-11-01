@@ -96,6 +96,11 @@ function CurrentTiny()
 		});
 	};
 
+	this.sendFlushCommand = function()
+	{
+		uart.send("at+flush\n");
+	};
+
 	/* Send command to receive firmware version from current mini */
 	this.getFirmwareVersion = function(callback)
 	{
