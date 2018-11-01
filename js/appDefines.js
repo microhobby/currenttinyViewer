@@ -167,6 +167,11 @@ function map_events()
 		/* key S start the sub array */
 		if (e.keyCode == 83) {
 			console.info("Start new storage ...");
+			new Notification("Start new storage", {
+				icon: 'assets/icons/icon_128.png',
+				body: "Storing points",
+				requireInteraction: false
+			});
 			storage = [];
 			newStorage = true;
 		}
@@ -174,6 +179,11 @@ function map_events()
 		/* key D stop the sub array and made avg */
 		if (e.keyCode == 68) {
 			console.info("Stop new storage ...");
+			new Notification("Stop storage", {
+				icon: 'assets/icons/icon_128.png',
+				body: "Ploting points",
+				requireInteraction: false   
+			});
 			newStorage = false;
 			current.getInstantAVGValue();
 

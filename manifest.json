@@ -2,7 +2,7 @@
 	"name": "CurrentTiny Viewer",
 	"version": "0.17",
 	"manifest_version": 2,
-	"permissions": ["serial"],
+	"permissions": ["serial", "notifications"],
 	"minimum_chrome_version": "23",
 	"icons": {
 		"16": "assets/icons/icon_16.png",
