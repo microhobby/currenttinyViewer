@@ -42,7 +42,7 @@ function CurrentTiny()
 					}
 					else if (onSuccess)
 						onSuccess(CurrentTiny.CONNECTED);
-				}, 2000);
+				}, 2500);
 			});
 			ixPath++;
 		} else {
@@ -82,6 +82,11 @@ function CurrentTiny()
 	this.getInstantAVGValue = function()
 	{
 		uart.send("at+instant\n");
+	};
+
+	this.stopFlush = function()
+	{
+		uart.send("at+stop\n");
 	};
 
 	/* Send command to receive values read every 10ms */

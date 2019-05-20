@@ -13,6 +13,13 @@ var str2ab = function(str)
 	return bytes.buffer;
 };
 
+function sendSerialCommand(cmd, fun)
+{
+	chrome.serial.send(
+		window.serialObject.connectionId, 
+		str2ab(cmd), fun);
+}
+
 chrome.app.runtime.onLaunched.addListener(function() 
 {
 	/* construct window */
@@ -35,18 +42,20 @@ chrome.app.runtime.onLaunched.addListener(function()
 
 			if (window.serialObject) {
 				console.info("send stop");
-				chrome.serial.send(
-					window.serialObject.connectionId, 
-					str2ab("at+instant\n"), 
-					function() 
-					{
-						chrome.serial.disconnect(
-						window.serialObject.connectionId, 
-						function()
+				/* 2x attempts */
+				sendSerialCommand("at+instant\n", function()
+				{
+					sendSerialCommand(
+						"at+instant\n", function()
 						{
-							console.info("Device disconnected");
-						});
-					});
+							chrome.serial.disconnect(
+							window.serialObject.connectionId, 
+							function()
+							{
+								console.info("Device disconnected");
+							});	
+						});	
+				});
 			}
 		});
 	});

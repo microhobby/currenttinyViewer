@@ -44,6 +44,9 @@ function Serial(bitrate)
 		else
 			console.info("Device Connected", connectionInfo);
 
+		console.log("this");
+		console.log(this);
+
 		serial.flush(connectionInfo.connectionId, function(){});
 		this.connectionId = connectionInfo.connectionId;
 		serial.onReceive.addListener(this.onReceive.bind(this));

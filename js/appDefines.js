@@ -123,6 +123,13 @@ function madeAvgs()
 	window.myChart.data.datasets[3].label = "Max " + max.toFixed(2)+ " mA";
 }
 
+function pad(num, size) 
+{
+	var s = num+"";
+	while (s.length < size) s = "0" + s;
+	return s;
+}
+
 function beginFlush()
 {
 	/* flip out the loading page */
@@ -135,7 +142,9 @@ function beginFlush()
 		{
 			var value = parseFloat(data);
 			/* ampere to miliampere */
-			value *= 10000.0;
+			value *= 1000.0;
+			value -= 90.0; // remove noise
+			value = value < 0 ? 0 : value;
 
 			/* set to ring buffer */
 			if (ringstack > RING_BUFFER_SIZE) {
@@ -151,7 +160,7 @@ function beginFlush()
 			window.myChart.data.datasets[0]
 				.data[ringstack] = value;
 			window.myChart.data.datasets[0].label = 
-				value.toFixed(2) + " mA";
+				pad(value.toFixed(2), 7) + " mA";
 			window.myChart.update();
 			ringstack++;
 		});
@@ -185,13 +194,23 @@ function map_events()
 				requireInteraction: false   
 			});
 			newStorage = false;
-			current.getInstantAVGValue();
 
-			update_ringbuffer(storage.length);
-			console.info("Get " + RING_BUFFER_SIZE + " points");
-			window.myChart.data.datasets[0].data = storage;
-			madeAvgs();
-			window.myChart.update();
+			/* 1x attempts */
+			current.getInstantAVGValue();
+			setTimeout(function()
+			{
+				current.getInstantAVGValue();
+
+				/* wait to uart stop flush */
+				setTimeout(function()
+				{
+					update_ringbuffer(storage.length);
+					console.info("Get " + RING_BUFFER_SIZE + " points");
+					window.myChart.data.datasets[0].data = storage;
+					madeAvgs();
+					window.myChart.update();
+				}, 500);
+			}, 500);
 		}
 
 		/* key F start normal flush */
